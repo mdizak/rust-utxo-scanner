@@ -1,0 +1,26 @@
+[package]
+name = "utxo-scanner"
+version = "0.1.0"
+authors = ["Matt Dizak"]
+autotests = false
+description = "Scans the chainstate LevelDB database frp, Bitcoin Core and extracts all UTXOs into either a RocksDB database or CSV file"
+readme = "Readme.md"
+license = "MIT"
+license-file = "License"
+repository = "https://github.com/mdizak/rust-utxo-scanner"
+edition = "2021"
+
+[lib]
+name = "utxo_scanner"
+
+[dependencies]
+crond = "0.1.1"
+db-key = "=0.0.5"
+lazy_static = "1.4.0"
+leveldb = "0.8.6"
+rocksdb = "0.20.1"
+rust-base58 = "0.0.4"
+rust-crypto = "0.2.36"
+secp256k1 = "0.26.0"
+
+
