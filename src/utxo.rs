@@ -3,6 +3,7 @@ pub enum AddressType {
     NonStandard,
     P2pkh,
     P2sh,
+    Bech32
 }
 
 #[derive(Clone, Debug)]
@@ -46,6 +47,7 @@ impl Utxo {
             format!("{}", self.vout),
             format!("{}", self.amount),
             format!("{}", self.address),
+            format!("{}", self.sigscript),
             format!("{}", self.height),
             format!("{}", self.coinbase),
         ]

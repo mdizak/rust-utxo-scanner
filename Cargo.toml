@@ -1,9 +1,9 @@
 [package]
 name = "utxo-scanner"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Matt Dizak"]
 autotests = false
-description = "Scans the chainstate LevelDB database frp, Bitcoin Core and extracts all UTXOs into either a RocksDB database or CSV file"
+description = "Scans the chainstate LevelDB database of, Bitcoin Core and extracts all UTXOs into either a RocksDB database, CSV file, or both."
 readme = "Readme.md"
 license = "MIT"
 license-file = "License"
@@ -14,8 +14,10 @@ edition = "2021"
 name = "utxo_scanner"
 
 [dependencies]
+bitcoin-bech32 = "0.12.1"
 crond = "0.1.1"
 db-key = "=0.0.5"
+hex = "0.4.3"
 lazy_static = "1.4.0"
 leveldb = "0.8.6"
 rocksdb = "0.20.1"

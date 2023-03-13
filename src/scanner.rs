@@ -152,8 +152,12 @@ fn get_address(script_type: &u64, sigscript: &Vec<u8>) -> (AddressType, String) 
     let mut addr_type = AddressType::NonStandard;
     let mut address = String::new();
 
+    // Bech32
+    if *script_type == 28 && (sigscript.len() == 22 || sigscript.len() == 34) {
+        address = keys::bech32_address(&sigscript);
+        addr_type = AddressType::Bech32;
     // p2sh
-    if *script_type == 1 {
+    } else if *script_type == 1 {
         address = keys::standard_address(&sigscript, true);
         addr_type = AddressType::P2sh;
 
@@ -201,10 +205,10 @@ fn add_utxo(utxo: &Utxo, create_rocksdb: &bool, csv_fh: &Option<File>) {
     // RocksDB
     if *create_rocksdb {
         let mut rocksdb_line = utxo.get_rocksdb_line();
-        if let Some(current_line) = ROCKSDB.get(&utxo.sigscript) {
+        if let Some(current_line) = ROCKSDB.get(&utxo.address) {
             rocksdb_line = format!("{}\n{}", current_line, rocksdb_line);
         }
-        ROCKSDB.put(&utxo.sigscript, &rocksdb_line);
+        ROCKSDB.put(&utxo.address, &rocksdb_line);
     }
 
     // Check csv

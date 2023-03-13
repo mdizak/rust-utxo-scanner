@@ -2,6 +2,8 @@ use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use rust_base58::ToBase58;
 use secp256k1::PublicKey;
+use bitcoin_bech32::WitnessProgram;
+use bitcoin_bech32::constants::Network;
 
 pub fn decompress(public_key_bytes: &Vec<u8>) -> Option<Vec<u8>> {
     // Load public key
@@ -33,6 +35,19 @@ pub fn standard_address(sigscript: &Vec<u8>, is_multisig: bool) -> String {
     //println!("Addr: {:?}", address.to_base58());
     address.to_base58()
 }
+
+pub fn bech32_address(sigscript: &Vec<u8>) -> String {
+
+    let witness = match WitnessProgram::from_scriptpubkey(&sigscript, Network::Bitcoin) {
+        Ok(r) => r,
+        Err(e) => return "".to_string()
+    };
+
+    witness.to_address()
+}
+
+
+
 
 fn double_sha256(bytes: &[u8]) -> Vec<u8> {
     let mut hasher = Sha256::new();
