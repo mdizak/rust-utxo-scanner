@@ -38,13 +38,13 @@ lazy_static! {
 //// RocksDB, a CSV file or both.
 ///
 /// Returns a struct that contains the total number of transactions, amount and seconds the process took.
-pub fn scan(bitcoin_datadir: &str, create_rocksdb: bool, csv_file: Option<&str>) {
+pub fn scan(bitcoin_datadir: &str, create_rocksdb: bool, csv_file: Option<&str>, testnet: bool) {
     *BITCOIN_DATADIR.lock().unwrap() = bitcoin_datadir
         .to_string()
         .trim_end_matches("/")
         .to_string();
 
-    scanner::scan(create_rocksdb, csv_file);
+    scanner::scan(create_rocksdb, csv_file, testnet);
 }
 
 /// Reset the RocksDB and start fresh when scanning.

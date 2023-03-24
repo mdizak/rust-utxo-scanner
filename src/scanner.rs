@@ -21,7 +21,7 @@ pub struct Stats {
     pub total_secs: u64,
 }
 
-pub fn scan(create_rocksdb: bool, csv_file: Option<&str>) -> Stats {
+pub fn scan(create_rocksdb: bool, csv_file: Option<&str>, testnet: bool) -> Stats {
 
     // Initialize
     let chainstate_dir = format!("{}/chainstate", BITCOIN_DATADIR.lock().unwrap());
@@ -109,7 +109,7 @@ pub fn scan(create_rocksdb: bool, csv_file: Option<&str>) -> Stats {
             }
 
             // Get address
-            let (addr_type, address) = get_address(&script_type, &_sigscript);
+            let (addr_type, address) = get_address(&script_type, &_sigscript, &testnet);
 
             // Define utxo
             let utxo: Utxo = Utxo::new(
@@ -147,23 +147,23 @@ pub fn scan(create_rocksdb: bool, csv_file: Option<&str>) -> Stats {
     stats
 }
 
-fn get_address(script_type: &u64, sigscript: &Vec<u8>) -> (AddressType, String) {
+fn get_address(script_type: &u64, sigscript: &Vec<u8>, testnet: &bool) -> (AddressType, String) {
     // Default address vars
     let mut addr_type = AddressType::NonStandard;
     let mut address = String::new();
 
     // Bech32
     if *script_type == 28 && (sigscript.len() == 22 || sigscript.len() == 34) {
-        address = keys::bech32_address(&sigscript);
+        address = keys::bech32_address(&sigscript, &testnet);
         addr_type = AddressType::Bech32;
     // p2sh
     } else if *script_type == 1 {
-        address = keys::standard_address(&sigscript, true);
+        address = keys::standard_address(&sigscript, true, &testnet);
         addr_type = AddressType::P2sh;
 
     // Standard
     } else {
-        address = keys::standard_address(&sigscript, false);
+        address = keys::standard_address(&sigscript, false, &testnet);
         addr_type = AddressType::P2pkh;
     }
 
