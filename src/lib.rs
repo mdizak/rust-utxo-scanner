@@ -50,7 +50,7 @@ pub fn scan(bitcoin_datadir: &str, create_rocksdb: bool, csv_file: Option<&str>,
 /// Reset the RocksDB and start fresh when scanning.
 pub fn reset_rocksdb(bitcoin_datadir: &str) {
     // Get directory
-    let dirname = format!("{}/chainstate", bitcoin_datadir.trim_end_matches("/"));
+    let dirname = format!("{}/rocksdb", bitcoin_datadir.trim_end_matches("/"));
     if !Path::new(&dirname).exists() {
         return;
     }

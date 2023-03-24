@@ -65,6 +65,7 @@ pub fn scan(create_rocksdb: bool, csv_file: Option<&str>, testnet: bool) -> Stat
     // Iterate through key-value pairs
     let iter = db.iter(read_opts);
     for (k, v) in iter {
+
         // Check first byte -
         if k.key[0] == 14 {
             obfuscate_key = v;

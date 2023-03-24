@@ -1,6 +1,6 @@
 [package]
 name = "utxo-scanner"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Matt Dizak"]
 autotests = false
 description = "Scans the chainstate LevelDB database of, Bitcoin Core and extracts all UTXOs into either a RocksDB database, CSV file, or both."
