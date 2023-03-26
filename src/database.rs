@@ -1,7 +1,7 @@
 extern crate rocksdb;
 
 use crate::BITCOIN_DATADIR;
-use rocksdb::{DBCompressionType, DB};
+use rocksdb::{DBCompressionType, DB, DBCompactionStyle};
 use std::fs;
 use std::path::Path;
 use std::sync::Arc;
@@ -32,8 +32,9 @@ impl Database for RocksDB {
         // Set options
         let mut opts = rocksdb::Options::default();
         opts.create_if_missing(true);
-        opts.set_compression_type(DBCompressionType::Snappy);
-        opts.increase_parallelism(24);
+        opts.set_compression_type(DBCompressionType::None);
+        //opts.set_compaction_style(DBCompactionStyle::Universal);
+        opts.increase_parallelism(4);
 
         // Connect to database
         let database = match DB::open(&opts, rocksdb_path.as_str()) {

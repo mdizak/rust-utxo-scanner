@@ -139,13 +139,13 @@ pub fn scan(create_rocksdb: bool, csv_file: Option<&str>, testnet: bool) -> Stat
     }
 
     // Set stats
-    let stats = Stats {
+    let final_stats = Stats {
         count: total,
         amount: total_amount as f64 / 10000000.0,
         total_secs: start_time.elapsed().as_secs(),
     };
 
-    stats
+    final_stats
 }
 
 fn get_address(script_type: &u64, sigscript: &Vec<u8>, testnet: &bool) -> (AddressType, String) {
@@ -153,8 +153,9 @@ fn get_address(script_type: &u64, sigscript: &Vec<u8>, testnet: &bool) -> (Addre
     let mut addr_type = AddressType::NonStandard;
     let mut address = String::new();
 
+
     // Bech32
-    if *script_type == 28 && (sigscript.len() == 22 || sigscript.len() == 34) {
+    if *script_type == 28 && sigscript[0] == 0 as u8 && sigscript[1] == 20 as u8 {
         address = keys::bech32_address(&sigscript, &testnet);
         addr_type = AddressType::Bech32;
     // p2sh
@@ -203,12 +204,14 @@ impl db_key::Key for TxKey {
 }
 
 fn add_utxo(utxo: &Utxo, create_rocksdb: &bool, csv_fh: &Option<File>) {
+
     // RocksDB
     if *create_rocksdb {
         let mut rocksdb_line = utxo.get_rocksdb_line();
         if let Some(current_line) = ROCKSDB.get(&utxo.address) {
-            rocksdb_line = format!("{}\n{}", current_line, rocksdb_line);
+            let rocksdb_line = format!("{}\n{}", current_line, rocksdb_line);
         }
+    let rocksdb_line = "Hello".to_string();
         ROCKSDB.put(&utxo.address, &rocksdb_line);
     }
 

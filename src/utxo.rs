@@ -68,6 +68,6 @@ impl Utxo {
         ]
         .join(",");
 
-        line
+    format!("{}\n", line)
     }
 }

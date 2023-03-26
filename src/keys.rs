@@ -19,19 +19,22 @@ pub fn decompress(public_key_bytes: &Vec<u8>) -> Option<Vec<u8>> {
 
 pub fn standard_address(sigscript: &Vec<u8>, is_multisig: bool, testnet: &bool) -> String {
 
-    // Get prefix
-    let mut prefix = 0x01;
-    if is_multisig && *testnet {
-        let prefix = 0xc4;
-    } else if is_multisig && !*testnet {
-        let prefix = 0x05;
-    } else if *testnet && !is_multisig {
-        let prefix = 0x6F;
-    }
+
 
     // Initialize
     let mut address = Vec::new();
-    address.extend(vec![prefix]);
+    if is_multisig && *testnet {
+        address.extend(vec![0xc4]);
+    } else if is_multisig && !*testnet {
+        address.extend(vec![0x05]);
+    } else if *testnet && !is_multisig {
+        address.extend(vec![0x6F]);
+    } else {
+            address.extend(vec![0x00]);
+    }
+
+
+
     address.extend(sigscript);
 
     // Get double sha256 hash
@@ -45,7 +48,7 @@ pub fn standard_address(sigscript: &Vec<u8>, is_multisig: bool, testnet: &bool) 
 pub fn bech32_address(sigscript: &Vec<u8>, testnet: &bool) -> String {
 
     // Get network
-    let network = if !testnet { Network::Testnet } else { Network::Bitcoin };
+    let network = if !testnet { Network::Bitcoin } else { Network::Testnet };
 
     let witness = match WitnessProgram::from_scriptpubkey(&sigscript, network) {
         Ok(r) => r,
